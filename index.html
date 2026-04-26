@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Venta | WhatsApp Sales Manager</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 500px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .form-container {
+      padding: 30px 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      background: #f9f9f9;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success-message {
+      display: none;
+      background: #4CAF50;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .error-message {
+      display: none;
+      background: #f44336;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .required {
+      color: #f44336;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .form-container {
+        padding: 20px;
+      }
+
+      .header h1 {
+        font-size: 20px;
+      }
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📱 Registrar Nueva Venta</h1>
+      <p>WhatsApp Sales Manager</p>
+    </div>
+
+    <div class="form-container">
+      <div class="success-message" id="successMsg"></div>
+      <div class="error-message" id="errorMsg"></div>
+
+      <form id="ventaForm">
+        <!-- CLIENTE -->
+        <div class="form-group">
+          <label>Nombre del cliente <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="cliente_nombre" 
+            placeholder="María González"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>WhatsApp <span class="required">*</span></label>
+          <input 
+            type="tel" 
+            id="cliente_whatsapp" 
+            placeholder="+54 9 11 1234-5678"
+            required
+          >
+          <div class="hint">Incluir código de área</div>
+        </div>
+
+        <!-- PRODUCTOS -->
+        <div class="form-group">
+          <label>Productos vendidos <span class="required">*</span></label>
+          <textarea 
+            id="productos" 
+            placeholder="Ej: Remera L negra, Gorro, Medias x3"
+            required
+          ></textarea>
+          <div class="hint">Separa con comas si son varios</div>
+        </div>
+
+        <!-- MONTO Y PAGO -->
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Monto <span class="required">*</span></label>
+            <input 
+              type="number" 
+              id="monto" 
+              placeholder="1500"
+              min="0"
+              step="0.01"
+              required
+            >
+            <div class="hint">Solo números, sin $</div>
+          </div>
+
+          <div class="form-group">
+            <label>Método de pago</label>
+            <select id="metodo_pago">
+              <option value="Transferencia">Transferencia</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="MercadoPago">MercadoPago</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Pendiente">Pendiente</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- NOTAS OPCIONALES -->
+        <div class="form-group">
+          <label>Notas (opcional)</label>
+          <textarea 
+            id="notas" 
+            placeholder="Cliente recurrente, envío gratis, etc."
+          ></textarea>
+        </div>
+
+        <div class="spinner" id="spinner"></div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          Registrar Venta
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ IMPORTANTE: Reemplaza esta URL con la URL de tu Apps Script
+    const SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT_AQUI";
+
+    const form = document.getElementById('ventaForm');
+    const btnSubmit = document.getElementById('btnSubmit');
+    const spinner = document.getElementById('spinner');
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Validar URL configurada
+      if (SCRIPT_URL === "TU_URL_DE_APPS_SCRIPT_AQUI") {
+        showError("Error: URL de Apps Script no configurada. Lee las instrucciones arriba.");
+        return;
+      }
+
+      // Deshabilitar botón y mostrar spinner
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "";
+      spinner.style.display = "block";
+      successMsg.style.display = "none";
+      errorMsg.style.display = "none";
+
+      // Recoger datos del formulario
+      const data = {
+        action: "registrarVenta",
+        cliente_nombre: document.getElementById('cliente_nombre').value.trim(),
+        cliente_whatsapp: document.getElementById('cliente_whatsapp').value.trim(),
+        productos: document.getElementById('productos').value.trim(),
+        monto: parseFloat(document.getElementById('monto').value),
+        metodo_pago: document.getElementById('metodo_pago').value,
+        nota: document.getElementById('notas').value.trim()
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Importante para Apps Script
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        // Con no-cors no podemos leer la respuesta, asumimos éxito si no hay error
+        showSuccess(`✅ Venta registrada: ${data.cliente_nombre} - $${data.monto.toLocaleString('es-AR')}`);
+        form.reset();
+
+      } catch (error) {
+        console.error('Error:', error);
+        showError("Error al registrar la venta. Revisa la consola para más detalles.");
+      } finally {
+        // Rehabilitar botón
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Registrar Venta";
+        spinner.style.display = "none";
+      }
+    });
+
+    function showSuccess(message) {
+      successMsg.textContent = message;
+      successMsg.style.display = "block";
+      setTimeout(() => {
+        successMsg.style.display = "none";
+      }, 5000);
+    }
+
+    function showError(message) {
+      errorMsg.textContent = message;
+      errorMsg.style.display = "block";
+    }
+
+    // Formatear monto mientras se escribe
+    document.getElementById('monto').addEventListener('input', (e) => {
+      const value = e.target.value;
+      if (value && !isNaN(value)) {
+        // Opcional: mostrar preview formateado
+        console.log('Monto:', parseFloat(value).toLocaleString('es-AR'));
+      }
+    });
+  </script>
+</body>
+</html>
